@@ -20,6 +20,8 @@ MQTT_PORT = int(OPTIONS["mqtt_port"])
 MQTT_USERNAME = OPTIONS["mqtt_username"]
 MQTT_PASSWORD = OPTIONS["mqtt_password"]
 SERIAL_DEVICE = OPTIONS["serial_device"]
+# WICHTIG: Hier mussen OPERATION_MODE und POLL_INTERVAL definiert werden
+OPERATION_MODE = OPTIONS.get("operation_mode", "Automatik (PUSH)")
 POLL_INTERVAL = int(OPTIONS.get("poll_interval", 5)) * 60  # Minuten in Sekunden umrechnen
 
 BASE_TOPIC = "smongle_buddy"
@@ -121,7 +123,7 @@ def read_json_object(ser, timeout_seconds=10):
 
 def main():
     _LOGGER.info("Smongle-Buddy MQTT-Bridge startet")
-    _LOGGER.info("Modus: %s, Seriell: %s, 115200 Baud", OPERATION_MODE, SERIAL_DEVICE)
+    _LOGGER.info("Modus: %s, Seriell: %s, 115200 Baud; MQTT: %s:%s", OPERATION_MODE, SERIAL_DEVICE, MQTT_HOST, MQTT_PORT)
 
     mqtt_client.connect(MQTT_HOST, MQTT_PORT, keepalive=60)
     mqtt_client.loop_start()
