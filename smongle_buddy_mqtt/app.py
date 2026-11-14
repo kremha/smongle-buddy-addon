@@ -136,36 +136,47 @@ def main():
                 bytesize=serial.EIGHTBITS,
                 parity=serial.PARITY_NONE,
                 stopbits=serial.STOPBITS_ONE,
-                timeout=60.0,
+                timeout=1.0,  # Kurzer Timeout für nicht-blockierendes Lesen im Push-Modus
                 write_timeout=10,
             ) as ser:
-                _LOGGER.info("Serielle Schnittstelle geöffnet; kurze Wartezeit nach dem Öffnen")
-                time.sleep(5)
+                _LOGGER.info("Serielle Schnittstelle geöffnet")
+                time.sleep(2)
                 ser.reset_input_buffer()
                 
+                # Für den PULL-Modus Timer-Steuerung
+                next_poll_time = 0.0
+
                 while True:
+                    current_time = time.monotonic()
+
+                    # Nur im manuellen Modus nach Ablauf des Intervalls aktiv abfragen
                     if OPERATION_MODE == "Manuell (PULL)":
-                        ser.write(b"api\n")
-                        ser.flush()
+                        if current_time >= next_poll_time:
+                            ser.write(b"api\n")
+                            ser.flush()
+                            next_poll_time = current_time + POLL_INTERVAL
                     
                     try:
-                        # Im PUSH-Modus warten wir auf Daten vom Gerät, im PULL-Modus auf die Antwort nach dem api-Befehl
-                        payload = read_json_object(ser, timeout_seconds=(POLL_INTERVAL + 10 if OPERATION_MODE == "Manuell (PULL)" else 60))
-                        if payload.get("status") == "ok":
+                        # Im PUSH-Modus unendlich warten (bzw. bis Daten kommen), im PULL mit kurzem Timeout lesen
+                        timeout_val = 60.0 if OPERATION_MODE == "Automatik (PUSH)" else 2.0
+                        payload = read_json_object(ser, timeout_seconds=timeout_val)
+                        
+                        if payload and payload.get("status") == "ok":
                             encoded = json.dumps(payload, separators=(",", ":"))
                             info = mqtt_client.publish(f"{BASE_TOPIC}/data", encoded, qos=1, retain=True)
                             info.wait_for_publish(timeout=5)
                             _LOGGER.info("JSON-Daten veröffentlicht (%d Felder)", len(payload))
-                        else:
-                            _LOGGER.warning("Antwort ohne status=ok erhalten")
+                    except TimeoutError:
+                        # Im Push-Modus ist ein Timeout normal, wenn gerade keine Daten gesendet werden -> einfach weiterlauschen
+                        if OPERATION_MODE == "Manuell (PULL)":
+                            pass
                     except Exception as e:
                         _LOGGER.warning("Fehler beim Lesen/Parsen der Daten: %s", e)
                     
-                    # Im PUSH-Modus wird einfach kontinuierlich gelesen, im PULL-Modus wird nach Intervall gewartet
-                    if OPERATION_MODE == "Manuell (PULL)":
-                        time.sleep(POLL_INTERVAL)
-                    else:
-                        time.sleep(1) # Kurzer Puffer im Push-Modus
+                    # Kleiner CPU-Schutz im Push-Modus
+                    if OPERATION_MODE == "Automatik (PUSH)":
+                        time.sleep(0.1)
+                        
         except KeyboardInterrupt:
             break
         except Exception as exc:
