@@ -5,6 +5,7 @@
 - USB Port als Eingabefeld
 - Translation: DE
 - Icon hinzugefügt
+- OPERATION_MODE definiert, Logging erweitert
 
 ## [0.1.1] - 2026-11-14
 - Herstellername auf "mechsat e.U." korrigiert.
