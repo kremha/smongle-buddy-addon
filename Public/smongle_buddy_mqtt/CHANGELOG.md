@@ -1,5 +1,11 @@
 # Changelog - Smongle Buddy MQTT
 
+## [0.1.2] - 2026-11-14
+- MQTT Userdaten als Eingabefelder
+- USB Port als Eingabefeld
+- Translation: DE
+- Icon hinzugefügt
+
 ## [0.1.1] - 2026-11-14
 - Herstellername auf "mechsat e.U." korrigiert.
 - Konfigurationsoption für Betriebsmodus ("Automatik (PUSH)" vs. "Manuell (PULL)") hinzugefügt.
