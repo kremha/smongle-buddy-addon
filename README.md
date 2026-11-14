@@ -1,4 +1,4 @@
-# Smongle Buddy MQTT
+# Smongle(r) Buddy MQTT
 
 Lokales Home-Assistant-App/Add-on für den Smongle(r) Buddy.
 
