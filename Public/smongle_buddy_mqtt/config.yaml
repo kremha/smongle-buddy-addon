@@ -1,0 +1,29 @@
+name: "Smongle Buddy MQTT"
+slug: "smongle_buddy_mqtt"
+description: "Liest den Smongle Buddy über USB-Serial aus und veröffentlicht die Daten per MQTT."
+version: "0.1.1"
+startup: services
+boot: auto
+init: false
+arch:
+  - amd64
+  - aarch64
+  - armv7
+  - armhf
+  - i386
+uart: true
+options:
+  mqtt_host: "core-mosquitto"
+  mqtt_port: 1883
+  mqtt_username: "mqtt_user"
+  mqtt_password: "mqtt_user"
+  serial_device: "/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_28:84:85:FD:18:C4-if00"
+  poll_interval: 5
+schema:
+  mqtt_host: str
+  mqtt_port: port
+  mqtt_username: str
+  mqtt_password: password
+  serial_device: str
+  operation_mode: list(Automatik (PUSH)|Manuell (PULL))
+  poll_interval: int(1,15)
