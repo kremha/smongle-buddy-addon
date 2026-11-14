@@ -2,7 +2,6 @@ name: "Smongle Buddy MQTT"
 slug: "smongle_buddy_mqtt"
 description: "Liest den Smongle Buddy über USB-Serial aus und veröffentlicht die Daten per MQTT."
 version: "0.1.2"
-image: "icon.png"
 startup: services
 boot: auto
 init: false
