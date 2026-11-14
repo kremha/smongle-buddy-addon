@@ -121,7 +121,7 @@ def read_json_object(ser, timeout_seconds=10):
 
 def main():
     _LOGGER.info("Smongle-Buddy MQTT-Bridge startet")
-    _LOGGER.info("Modues: %s, Seriell: %s, 115200 Baud", OPERATION_MODE, SERIAL_DEVICE)
+    _LOGGER.info("Modus: %s, Seriell: %s, 115200 Baud", OPERATION_MODE, SERIAL_DEVICE)
 
     mqtt_client.connect(MQTT_HOST, MQTT_PORT, keepalive=60)
     mqtt_client.loop_start()
