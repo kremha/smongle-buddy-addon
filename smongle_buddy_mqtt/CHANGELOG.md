@@ -1,5 +1,8 @@
 # Changelog - Smongle Buddy MQTT
 
+## [0.1.5] - 2026-11-17
+- Entitäten von -measurement- auf -total- korrigiert
+
 ## [0.1.4| - 2026-11-14
 - OPERATION_MODE definiert, Logging erweitert
 - Automatik (PUSH): Lauscht kontinuierlich im Hintergrund auf ankommende Zeilen, ohne künstliche Timeouts oder aktive Abfragen.
